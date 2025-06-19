@@ -1,0 +1,331 @@
+What is Reconnaissance ?
+
+Reconnaissance also known as `Information Gathering` and `Footprinting`, is the first step and action that hackers do when approaching a target to search for weaknesses and use the advantage of vulnerabilities found in Exploiting the target system.
+
+Recon is a process of Gathering as much information as possible about the target, for identifying various techniques to intrude into the target system.
+
+Recon Types :
+
+Active: Involves directly interacting with the system architecture and infrastructure. Like interacting with system’s traffic and requests or physically accessing the company’s area.
+
+Passive: Involves gathering Information without Direct Interaction with the Target. Like using Search Engines and Open Source Intelligences to gather information about the target system.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Domain: *.mydukaan.io
+
+1) DNS Recon
+`````````````
+RR(s):
+```````
+A 	[ Address Record - IPv4 ] name-ip
+PTR	[ Point to reverse ] ip-name
+MX	[ Mail Exchanger - MTA ]
+TXT	[ SPF, DKIM, DMARC -> Prevent Mail Spam/Spoof ] 
+SOA	[ Set/Start of authority ]
+NS 	[ Name Server ]
+CNAME [ Canonical Name ]
+
+TOOL/COMMANDS: nslookup, dig, host
+
+Address Record: [A]
+````````````````````
+ # host -t A target.tld
+ -t : Type of RR
+
+ 
+
+MX & TXT
+`````````
+# host -t MX target.tld
+
+# host -t txt target.tld
+
+Automation:
+`````````````
+#!/bin/bash
+file=$1
+if [ -z ${file} ];then
+    echo "Error: $1 is required"
+    exit 127
+fi
+while read -r sub;do
+    if host -t mx ${sub} &> /dev/null;then
+           host -t TXT ${sub}| grep "has no TXT" | awk '{print $1}'
+    fi
+done < $file
+------------------------------------------------
+
+
+
+
+
+curl -ks 'https://go.dev/VERSION?m=text'|head -1
+wget "https://go.dev/dl/go1.24.4.linux-amd64.tar.gz"
+sudo tar -xzvf go1.24.4.linux-amd64.tar.gz -C $HOME
+
+
+
+PATH:
+``````
+if ZSH
+```````
+$ sudo vim ~/.zshrc
+export GOROOT="$HOME/go"
+export GOPATH="$HOME/go/packages"
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+
+$ source ~/.zshrc
+if BASH
+```````
+$ sudo vim ~/.bashrc
+export GOROOT="$HOME/go"
+export GOPATH="$HOME/go/packages"
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+
+$ source ~/.bashrc
+-------------------------
+Subdomain Enum
+```````````````
+[+] Subfinder (https://github.com/projectdiscovery/subfinder)
+
+Install:
+go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+
+For Auth Scan:
+```````````````
+# subfinder -d mydukaan.io -pc ~/.config/subfinder/provider-config.yaml -recursive -all -silent | tee subfinder.txt
+
+# vim ~/.config/subfinder/provider-config.yaml
+
+ADD ALL APIs
+
+
+
+Other tool-----------------------------------------------
+ANEW [https://github.com/tomnomnom/anew]
+
+go install -v github.com/tomnomnom/anew@latest
+----------------------------------------------------------
+
+
+Level-1
+````````
+# cat subfinder.txt | rev | cut -d. -f1-3 | rev | sort -u --version-sort | anew level-1.txt
+# subfinder -dL level-1.txt -pc ~/.config/subfinder/provider-config.yaml -recursive -all -silent | anew subfinder.txt
+
+Level-2
+````````
+# cat subfinder.txt | rev | cut -d. -f1-4 | rev | sort -u --version-sort | anew level-2.txt
+# subfinder -dL level-2.txt -pc ~/.config/subfinder/provider-config.yaml -recursive -all -silent | anew subfinder.txt
+
+
+[+] assetfinder (https://github.com/tomnomnom/assetfinder)
+
+Install: go install -v github.com/tomnomnom/assetfinder@latest
+
+# assetfinder -subs-only mydukaan.io | anew subfinder.txt
+
+
+
+
+Permutation/Alterations
+https://sidxparab.gitbook.io/~gitbook/image?url=https%3A%2F%2F4209742079-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-legacy-files%2Fo%2Fassets%252F-M_yFhMt21WnWVD7n0gh%252F-Mc2sNqN3nsaAl_QIuwL%252F-Mc2xPPeGappPzqTxF4o%252Fpermutations.png%3Falt%3Dmedia%26token%3D7fd996f3-98cd-4451-8c34-b1dd9a4581e3&width=768&dpr=1&quality=100&sign=2fc316d&sv=2
+
+
+
+
+Resolution:
+Now that we have made a huge list of all the possible subdomains that could exist, now it's time to DNS resolve them and check for valid ones.
+
+For this, we will again use Puredns.
+
+It's always better to generate fresh public DNS resolvers every time we use them.
+
+Copy
+puredns resolve permutations.txt -r resolvers.txt
+
+
+____________________________________
+DORKs: Adv Operators
+`````````````````````
+SHODAN:
+```````
+Collect Assets: IP,PORT,OS,PRODUCT,CVE,etc,,,
+
+hostname:"mydukaan.io"
+ssl:"mydukaan.io"
+ssl.cert.subject.cn:"mydukaan.io"
+ssl.cert.expired:true hostname:"*.mydukaan.io"
+
+
+https://raw.githubusercontent.com/Dheerajmadhukar/karma_v2/refs/heads/main/img/shodan_osint_manual_recon.txt
+
+
+SHODAN CLI:
+````````````
+[+] Install
+`````````````
+$ pip3 install -U shodan --break-system-packages
+
+[+] Login CLI using API
+````````````````````````
+$ sudo shodan init nomI9wFvS5wsTlusZ4hHI93Y7L34QiIc
+Successfully initialized
+
+$ sudo shodan info
+Query credits available: 100
+Scan credits available: 100
+
+[+] Shodan help
+````````````````
+$ sudo shodan -h
+$ sudo shodan search -h
+
+[+] Module: count (free):
+`````````````````````````
+$ sudo shodan count hostname:"mydukaan.io"
+
+[+]  Module: download (paid):
+``````````````````````````````
+shodan download --limit -1 mydukaan_ssl ssl:"mydukaan.io"
+
+--limit INTEGER  The number of results you want to download. -1 to download all the data possible.
+
+
+$ cat dorks.txt
+hostname:"mydukaan.io"
+ssl:"mydukaan.io"
+ssl.cert.subject.cn:"mydukaan.io"
+ssl.cert.expired:true hostname:"*.mydukaan.io"
+
+
+$ while read -r dork;do shodan download --limit -1 mydukaan_${dork} ${dork};done < dorks.txt
+
+Automate:
+```````````
+
+
+black='\e[38;5;016m'
+bluebg='\e[48;5;038m'${black}
+red='\e[31m'
+lightred='\e[91m'
+blink='\e[5m'
+lightblue='\e[38;5;109m'
+green='\e[32m'
+greenbg='\e[48;5;038m'${black}
+yellow='\e[33m'
+logo='\033[0;36m'
+upper="${lightblue}╔$(printf '%.0s═' $(seq "80"))╗${end}"
+lower="${lightblue}╚$(printf '%.0s═' $(seq "80"))╝${end}"
+right=$(printf '\u2714')
+cross=$(printf '\u2718')
+end='\e[0m'
+program="⡷⠂𝚔𝚊𝚛𝚖𝚊 𝚟𝟸⠐⢾"
+version="v2"
+description="Premium Shodan Recon"
+ls -1 *.json.gz | while read -r x; do
+        IP=$(zcat $x | jq -r 'select(.ip_str != null)|.ip_str' | sort -u | sed -n '1h;2,$H;${g;s/\n/, /g;s/<----- key \(start\|stop\) ----->//g;p}')
+        OS=$(zcat $x | jq -r 'select(.os != null)|.os' | sort -u | sed -n '1h;2,$H;${g;s/\n/, /g;s/<----- key \(start\|stop\) ----->//g;p}')
+        CVE=$(zcat $x | jq -r '.vulns | to_entries[] | select(.key != null) |.key' 2> /dev/null | sed -n '1h;2,$H;${g;s/\n/, /g;s/<----- key \(start\|stop\) ----->//g;p}')
+        ORG=$(zcat $x | jq -r 'select(.org != null)|.org'|sort -u | sed -n '1h;2,$H;${g;s/\n/, /g;s/<----- key \(start\|stop\) ----->//g;p}')
+        PORT=$(zcat $x | jq -r 'select(.port != null)|.port' | sort -u | sed -n '1h;2,$H;${g;s/\n/, /g;s/<----- key \(start\|stop\) ----->//g;p}')
+        SERVER=$(zcat $x | jq -r '.http|select(.server != null)|.server' | sort -u | sed -n '1h;2,$H;${g;s/\n/, /g;s/<----- key \(start\|stop\) ----->//g;p}')
+        PRODUCT=$(zcat $x | jq -r 'select(.product != null)|.product' | sort -u | sed -n '1h;2,$H;${g;s/\n/, /g;s/<----- key \(start\|stop\) ----->//g;p}')
+        HOSTNAME=$(zcat $x | jq -r 'select(.hostnames != null)|.hostnames[]' | sort -u | sed -n '1h;2,$H;${g;s/\n/, /g;s/<----- key \(start\|stop\) ----->//g;p}')
+
+
+        if [ -z "$IP" ];then
+                printf "[${cross}] ${red}IPs:${end} ${yellow}No results found ${end}\n";
+        else
+                echo ${IP} | while read -r line;do
+                       printf "[${right}] ${red}${IP}${end}\n\t┌${bluebg}OS${end}\t\t────>\t $( [[ ! -z $OS ]] && printf "${green}${OS}${end}" || printf "${yellow}No results found"${end} )\n\t├${bluebg}HOST${end}\t\t────>\t $( [[ ! -z $HOSTNAME ]] && printf "${green}${HOSTNAME}${end}" || printf "${yellow}No results found"${end} )\n\t├${bluebg}ORGS${end}\t\t────>\t $( [[ ! -z $ORG ]] && printf "${green}${ORG}${end}" || printf "${yellow}No results found"${end} )\n\t├${bluebg}PORTS${end}\t\t────>\t $( [[ ! -z $PORT ]] && printf "${green}${PORT}${end}" || printf "${yellow}No results found"${end} )\n\t├${bluebg}SERVERS${end}\t────>\t $( [[ ! -z $SERVER ]] && printf "${green}${SERVER}${end}" || printf "${yellow}No results found"${end} )\n\t├${bluebg}PRODUCTS${end}\t────>\t $( [[ ! -z $PRODUCT ]] && printf "${green}${PRODUCT}${end}" || printf "${yellow}No results found"${end} )\n\t└${bluebg}CVE VULNs${end}\t────>\t $( [[ ! -z $CVE ]] && printf "${green}${CVE}${end}" || printf "${yellow}No results found"${end} )\n\n"
+
+                done
+        fi
+done
+
+GITHUB: https://github.com/Dheerajmadhukar/karma_v2
+
+
+__________________________________
+JSON
+
+# cat data.json
+{ "name":"Dheeraj", "love":{"drink":"coffee","hack":"webapps"}}
+
+# cat data.json | jq '.'
+
+# cat data.json | jq '.name'
+"Dheeraj"
+
+# cat data.json | jq -r '.name'
+Dheeraj
+
+-r : raw data
+
+
+
+# cat data.json | jq '.love'
+{
+  "drink": "coffee",
+  "hack": "webapps"
+}
+
+
+# cat data.json | jq '.love.hack'
+"webapps"
+
+
+# cat data.json
+[{ "name":"Dheeraj", "love":{"drink":"coffee","hack":"webapps"}}]
+
+
+# cat data.json | jq '.'
+
+# cat data.json | jq '.[]'
+
+# cat data.json | jq '.[0]'
+# cat data.json | jq '.[1]'
+
+# cat data.json | jq '.[].name'
+# cat data.json | jq '.[].love.drink'
+_______________________________
+
+
+
+
+<======================================================================================>
+
+Alive Subdomains:
+`````````````````
+[+] Active Subs
+	|_ Web Assets (80,443) -> Status
+	|_ N/W Assets
+	|_ Servers behind CDNs
+
+1) Web Assets:
+```````````````
+# which httpx
+/usr/bin/httpx
+# mv /usr/bin/httpx /usr/bin/xhttp
+
+[+] install httpx (https://github.com/projectdiscovery/httpx)
+``````````````````
+go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+
+
+# cat subfinder.txt | httpx -silent -title -sc -nc | anew alive.txt
+
+cat alive.txt | grep "\[2..\]" | anew status/200.txt
+cat alive.txt | grep "\[3..\]" | anew status/300.txt
+cat alive.txt | grep "\[4..\]" | anew status/400.txt
+cat alive.txt | grep "\[5..\]" | anew status/500.txt
+
+
+
+2) N/W Assets:
+```````````````
+# while read -r sub;do if host -t A ${sub} &> /dev/null;then echo "${sub}";fi;done < subfinder.txt | anew alive_nw_assets.txt
+
+3) CDNs:
+`````````
+# cat alive.txt | httpx -silent -cdn | anew cdn.txt
