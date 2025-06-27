@@ -1,0 +1,11 @@
+#!/bin/bash
+file=$1
+if [ -z ${file} ];then
+    echo "Error: $1 is required"
+    exit 127
+fi
+while read -r sub;do
+    if host -t mx ${sub} &> /dev/null;then
+           host -t TXT ${sub}| grep "has no TXT" | awk '{print $1}' 
+    fi
+done < $file

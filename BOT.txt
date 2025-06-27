@@ -1,0 +1,129 @@
+Telegram Chat Bot
+`````````````````
+1. open telegram
+
+
+
+
+2. search for `@botfather` and select verified account
+
+
+
+
+3. /newbot
+
+
+
+4. choose name: gabbar_bot
+
+
+
+
+5. choose username: d_cdac_bot
+	t.me/d_cdac_bot
+	
+
+
+
+
+6. Copy HTTP API token
+
+Done! Congratulations on your new bot. You will find it at t.me/d_cdac_bot. You can now add a description, about section and profile picture for your bot, see /help for a list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. Just make sure the bot is fully operational before you do this.
+
+Use this token to access the HTTP API:
+7048999836:AAEZKyKfst2gpjiYgI-s13GmoKGGW0wNqQs
+Keep your token secure and store it safely, it can be used by anyone to control your bot.
+
+For a description of the Bot API, see this page: https://core.telegram.org/bots/api
+
+@wsws_11_bot
+
+To get chat ID:
+````````````````
+
+“@myidbot”
+
+type: /getid
+
+
+Your own ID is: 815331231
+
+
+
+
+
+
+
+Linux:
+``````
+
+7. notify: https://github.com/projectdiscovery/notify
+
+# go install -v github.com/projectdiscovery/notify/cmd/notify@latest
+
+
+# notify -h
+
+# cd ~/.config/
+# mkdir notify
+# cd notify
+# vim provider-config.yaml
+
+telegram:
+  - id: "tel"
+    telegram_api_key: "XXXXXXXXXXXX"
+    telegram_chat_id: "XXXXXXXX"
+    telegram_format: "{{data}}"
+
+
+
+
+
+# echo "LOL" | notify --silent
+
+
+# subfinder -d nike.com | notify --silent
+
+========================================================
+Done! Congratulations on your new bot. You will find it at t.me/sdt_paisa_bot. You can now add a description, about section and profile picture for your bot, see /help for a list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. Just make sure the bot is fully operational before you do this.
+
+Use this token to access the HTTP API:
+7544762383:AAEzKk8CD5ynLZI9QWPoYXKzIV-VwyVruD8
+Keep your token secure and store it safely, it can be used by anyone to control your bot.
+
+For a description of the Bot API, see this page: https://core.telegram.org/bots/api
+
+Your own ID is: 932949007
+
+=========================================================
+
+
+#!/usr/bin/python3
+#!pip install python-telegram-bot==13.3
+from telegram.ext import *
+import subprocess as ss
+telegram_token = '7627616292:AAF91w1vBqA-vljtKCCvp0qlT18pFuZbqOE'
+
+updater = Updater(telegram_token, use_context=True)
+dispatcher = updater.dispatcher
+
+def start(update, context):
+    name = update.effective_user.first_name
+    update.message.reply_text("Welcome {}".format(name))
+
+def message_handler(update, context):
+    message = update.message
+    out = ss.getoutput("host {} -silent".format(message.text))
+    a = out.split('\n')
+    for i in a:
+        update.message.reply_text(i)
+
+
+
+dispatcher = updater.dispatcher
+updater.dispatcher.add_handler(CommandHandler('start', start))
+updater.dispatcher.add_handler(MessageHandler(Filters.text, message_handler))
+updater.start_polling()
+updater.idle()
+
+==================================================== 

